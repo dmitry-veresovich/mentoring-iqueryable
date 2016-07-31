@@ -18,8 +18,8 @@ namespace Sample03
 
 			foreach (var emp in res)
 			{
-				Console.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
-			}
+                PrintEmployee(emp);
+            }
 		}
 
 		[TestMethod]
@@ -30,8 +30,8 @@ namespace Sample03
 
 			foreach (var emp in res.OfType<EmployeeEntity>())
 			{
-				Console.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
-			}
+                PrintEmployee(emp);
+            }
 		}
 
 
@@ -42,7 +42,7 @@ namespace Sample03
 
 			foreach (var emp in employees.Where(e => e.workstation == "EPRUIZHW0249"))
 			{
-                Console.WriteLine(" {0} {1}", emp.startworkdate, emp.workstation);
+                PrintEmployee(emp);
             }
         }
 
@@ -53,10 +53,9 @@ namespace Sample03
 
             foreach (var emp in employees.Where(e => "EPRUIZHW0249" == e.workstation))
             {
-                Console.WriteLine($"{emp.nativename} {emp.startworkdate} {emp.workstation}");
+                PrintEmployee(emp);
             }
         }
-
 
         [TestMethod]
         public void WithProviderStartsWith()
@@ -65,7 +64,7 @@ namespace Sample03
 
             foreach (var emp in employees.Where(e => e.workstation.StartsWith("EPRUIZHW024")))
             {
-                Console.WriteLine($"{emp.nativename} {emp.startworkdate} {emp.workstation}");
+                PrintEmployee(emp);
             }
         }
 
@@ -76,7 +75,7 @@ namespace Sample03
 
             foreach (var emp in employees.Where(e => e.workstation.EndsWith("0249")))
             {
-                Console.WriteLine($"{emp.nativename} {emp.startworkdate} {emp.workstation}");
+                PrintEmployee(emp);
             }
         }
 
@@ -87,8 +86,47 @@ namespace Sample03
 
             foreach (var emp in employees.Where(e => e.workstation.Contains("UIZHW02")))
             {
-                Console.WriteLine($"{emp.nativename} {emp.startworkdate} {emp.workstation}");
+                PrintEmployee(emp);
             }
         }
-    }
+
+        [TestMethod]
+        public void WithoutProviderAnd()
+        {
+            var client = new E3SQueryClient(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+            var res = client.SearchFTS<EmployeeEntity>("workstation:(*4881*) workstation:(EPBYMINW*)", 0, 1);
+
+            foreach (var emp in res)
+            {
+                PrintEmployee(emp);
+            }
+        }
+
+        [TestMethod]
+        public void WithProviderAndOrder1()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => e.workstation.Contains("4881") && e.workstation.StartsWith("EPBYMINW")))
+            {
+                PrintEmployee(emp);
+            }
+        }
+
+        [TestMethod]
+        public void WithProviderAndOrder2()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => e.workstation.StartsWith("EPBYMINW") && e.workstation.Contains("4881")))
+            {
+                PrintEmployee(emp);
+            }
+        }
+
+	    private static void PrintEmployee(EmployeeEntity emp)
+	    {
+	        Console.WriteLine($"{emp.nativename} {emp.startworkdate} {emp.workstation}");
+	    }
+	}
 }

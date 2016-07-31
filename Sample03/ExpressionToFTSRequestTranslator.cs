@@ -105,6 +105,11 @@ namespace Sample03
 					resultString.Append(")");
 					break;
 
+                case ExpressionType.AndAlso:
+			        Visit(node.Left);
+			        resultString.Append(" ");
+			        Visit(node.Right);
+                    break;
 				default:
 					throw new NotSupportedException(string.Format("Operation {0} is not supported", node.NodeType));
 			};
