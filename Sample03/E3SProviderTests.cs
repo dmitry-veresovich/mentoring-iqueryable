@@ -42,8 +42,8 @@ namespace Sample03
 
 			foreach (var emp in employees.Where(e => e.workstation == "EPRUIZHW0249"))
 			{
-				Console.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
-			}
+                Console.WriteLine(" {0} {1}", emp.startworkdate, emp.workstation);
+            }
         }
 
         [TestMethod]
@@ -53,7 +53,41 @@ namespace Sample03
 
             foreach (var emp in employees.Where(e => "EPRUIZHW0249" == e.workstation))
             {
-                Console.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
+                Console.WriteLine($"{emp.nativename} {emp.startworkdate} {emp.workstation}");
+            }
+        }
+
+
+        [TestMethod]
+        public void WithProviderStartsWith()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => e.workstation.StartsWith("EPRUIZHW024")))
+            {
+                Console.WriteLine($"{emp.nativename} {emp.startworkdate} {emp.workstation}");
+            }
+        }
+
+        [TestMethod]
+        public void WithProviderEndsWith()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => e.workstation.EndsWith("0249")))
+            {
+                Console.WriteLine($"{emp.nativename} {emp.startworkdate} {emp.workstation}");
+            }
+        }
+
+        [TestMethod]
+        public void WithProviderContains()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => e.workstation.Contains("UIZHW02")))
+            {
+                Console.WriteLine($"{emp.nativename} {emp.startworkdate} {emp.workstation}");
             }
         }
     }

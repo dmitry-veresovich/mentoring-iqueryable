@@ -29,7 +29,37 @@ namespace Sample03
 
 				return node;
 			}
-			return base.VisitMethodCall(node);
+			if (node.Method.DeclaringType == typeof(string)
+                && node.Method.Name == "StartsWith")
+			{
+                Visit(node.Object);
+                resultString.Append("(");
+                var arg = node.Arguments[0];
+                Visit(arg);
+                resultString.Append("*)");
+			    return node;
+			}
+            if (node.Method.DeclaringType == typeof(string)
+                && node.Method.Name == "EndsWith")
+            {
+                Visit(node.Object);
+                resultString.Append("(*");
+                var arg = node.Arguments[0];
+                Visit(arg);
+                resultString.Append(")");
+                return node;
+            }
+            if (node.Method.DeclaringType == typeof(string)
+                && node.Method.Name == "Contains")
+            {
+                Visit(node.Object);
+                resultString.Append("(*");
+                var arg = node.Arguments[0];
+                Visit(arg);
+                resultString.Append("*)");
+                return node;
+            }
+            return base.VisitMethodCall(node);
 		}
 
 		protected override Expression VisitBinary(BinaryExpression node)
