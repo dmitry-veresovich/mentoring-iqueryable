@@ -36,7 +36,7 @@ namespace Sample03
 
 
 		[TestMethod]
-		public void WithProvider()
+		public void WithProviderOrder1()
 		{
 			var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
 
@@ -45,5 +45,16 @@ namespace Sample03
 				Console.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
 			}
         }
-	}
+
+        [TestMethod]
+        public void WithProviderOrder2()
+        {
+            var employees = new E3SEntitySet<EmployeeEntity>(ConfigurationManager.AppSettings["user"], ConfigurationManager.AppSettings["password"]);
+
+            foreach (var emp in employees.Where(e => "EPRUIZHW0249" == e.workstation))
+            {
+                Console.WriteLine("{0} {1}", emp.nativename, emp.startworkdate);
+            }
+        }
+    }
 }

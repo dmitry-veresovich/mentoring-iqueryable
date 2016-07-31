@@ -37,15 +37,41 @@ namespace Sample03
 			switch (node.NodeType)
 			{
 				case ExpressionType.Equal:
-					if (!(node.Left.NodeType == ExpressionType.MemberAccess))
-						throw new NotSupportedException(string.Format("Left operand should be property or field", node.NodeType));
+			        Expression memberAccessExpression;
+			        Expression constantExpression;
 
-					if (!(node.Right.NodeType == ExpressionType.Constant))
-						throw new NotSupportedException(string.Format("Right operand should be constant", node.NodeType));
+			        if (node.Left.NodeType == ExpressionType.MemberAccess)
+			        {
+			            memberAccessExpression = node.Left;
+			            if (node.Right.NodeType == ExpressionType.Constant)
+			            {
+			                constantExpression = node.Right;
+			            }
+			            else
+			            {
+                            throw new NotSupportedException(string.Format("Right operand should be constant", node.NodeType));
+                        }
+			        }
+			        else if (node.Left.NodeType == ExpressionType.Constant)
+			        {
+                        constantExpression = node.Left;
+                        if (node.Right.NodeType == ExpressionType.MemberAccess)
+                        {
+                            memberAccessExpression = node.Right;
+                        }
+                        else
+                        {
+                            throw new NotSupportedException(string.Format("Right operand should be property or field", node.NodeType));
+                        }
+                    }
+			        else
+			        {
+                        throw new NotSupportedException(string.Format("Left operand should be constant, property or field", node.NodeType));
+                    }
 
-					Visit(node.Left);
+					Visit(memberAccessExpression);
 					resultString.Append("(");
-					Visit(node.Right);
+					Visit(constantExpression);
 					resultString.Append(")");
 					break;
 
